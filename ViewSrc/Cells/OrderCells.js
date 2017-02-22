@@ -55,7 +55,7 @@ export class SelectCell extends Component {
                 resizeMode={'contain'} />
         </View> : null;
         if (this.props.selectType == 'single') {
-            selectImage = <Image source={(this.state.isSelected ? { uri: 'selected' } : { uri: 'unselected' })}
+            selectImage = <Image source={(this.props.selected ? { uri: 'selected' } : { uri: 'unselected' })}
                 style={{ width: 18, height: 18 }}
                 resizeMode={'contain'}
             />;
@@ -87,14 +87,32 @@ export class SelectCell extends Component {
 
     render() {
 
+        console.log(this);
+        let press = null;
+        if (this.props.selectType == 'multi') {
+            press = () => this._handleSelectedButtonPress(this.state.isSelected)
+        } else if (this.props.selectType == 'single') {
+            //TODO: 添加点击
+            press = () => {
+
+                if (this.props.chooiseNew) {
+                    this.props.chooiseNew(this.props.index)
+                }
+            };
+        }
+
         return (
             <View>
-                <View style={{ height: 49, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <TouchableWithoutFeedback onPress={() => this._handleSelectedButtonPress(this.state.isSelected)}>
+                <View style={{ height: this.props.height || 49, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: this.props.bgColor || 'white' }}>
+                    <TouchableWithoutFeedback onPress={press}>
                         <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 15 }}>
                             {this._selectType().imageView}
                             {this._selectType().payView}
-                            <Text style={{ marginLeft: this._selectType().blank, fontSize: 14 }}>{this.props.title}</Text>
+                            <Text style={{
+                                marginLeft: this._selectType().blank,
+                                fontSize: this.props.fontSize || 14,
+                                color:this.props.fontColor
+                            }}>{this.props.title}</Text>
                         </View>
                     </TouchableWithoutFeedback>
                     {this._selectType().right}
@@ -211,17 +229,17 @@ export class TotalCell extends Component {
     render() {
         let freightView = this.props.message.othercost > 0 ?
             (<Text style={{ color: '#9397A1', fontSize: 13, marginRight: 15 }}>（包含运费 ¥{this.props.message.othercost}）</Text>) : null;
-        
+
         let rightBlank = freightView ? 0 : 15;
 
         return (
             <View style={{ backgroundColor: '#FAFAFA', flexDirection: 'row-reverse', height: 50, alignItems: 'center' }}>
                 {freightView}
-                <Text style={{fontSize:13, marginRight:rightBlank}}>
+                <Text style={{ fontSize: 13, marginRight: rightBlank }}>
                     合计
                     <Text style={{ color: '#FF3600', fontSize: 13 }}> ¥ {this.props.message.total}</Text>
                 </Text>
-                <Text style={{marginRight:14,fontSize:13}}>共{this.props.message.count}件商品</Text>
+                <Text style={{ marginRight: 14, fontSize: 13 }}>共{this.props.message.count}件商品</Text>
             </View>
         )
     }

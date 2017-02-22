@@ -43,7 +43,7 @@ export default class GoodsCar extends Component {
         } else {
             let isSoldOut = false; 
             let isSoldText = null;
-            if(!(rowData.go)) {
+            if(!(rowData.indexOf('row3'))) {
                 isSoldOut = true;
                 isSoldText = <Text style={{backgroundColor:'rgba(255,255,255,0.15)', color:'white'}}>售罄</Text>;
             }
